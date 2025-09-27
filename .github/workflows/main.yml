@@ -1,7 +1,7 @@
 name: Windows LiteManager Setup
 
 on:
-  workflow_dispatch:  # manual trigger
+  workflow_dispatch:
 
 jobs:
   lite-windows:
@@ -10,19 +10,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download Lite Manager Server
+      - name: Install LiteManager Server
         run: |
-          Invoke-WebRequest "https://www.litemanager.com/download/LiteManagerServer.zip" -OutFile "LiteManagerServer.zip"
-          Expand-Archive LiteManagerServer.zip -DestinationPath C:\LiteManager
+          msiexec /i "${{ github.workspace }}\litemanager_5\LiteManager Pro - Server.msi" /quiet /norestart
 
-      - name: Install Lite Manager silently
+      - name: Start LiteManager Server
         run: |
-          Start-Process "C:\LiteManager\LiteManagerServer.exe" "/S" -Wait
+          Start-Process "C:\Program Files (x86)\LiteManager Pro\LiteManagerServer.exe"
 
-      - name: Start Lite Manager Server
-        run: |
-          Start-Process "C:\LiteManager\LiteManagerServer.exe" "/start" 
-
-      - name: Show IP info
+      - name: Display IP Address
         run: |
           ipconfig
